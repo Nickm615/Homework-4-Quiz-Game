@@ -13,6 +13,11 @@ var question5 = { question: "placeholder 5", choices:["A: placeholder", "B: plac
 var questionSet = [question1, question2, question3, question4, question5]
 var currentQuestion = questionSet[Math.floor(Math.random() * questionSet.length)];
 console.log (currentQuestion.choices)
+// //This function is supposed to overwrite "display: none" on the style of the choices container with the radio buttons. Not working right now.
+// function setChoices() {
+//     var choices = document.getElementById("choices");
+//     choices.style = "display: block";
+// }
 
 function setQuestion() {
 var onScreenQuestion = document.createElement('p');
@@ -30,7 +35,7 @@ function startGame() {
     console.log("game start");
     setQuestion();
     startButton.remove;
-    setOptions;
+    setChoices;
   
 }
 
