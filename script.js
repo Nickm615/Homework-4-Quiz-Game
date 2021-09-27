@@ -30,6 +30,7 @@ function startGame() {
     console.log("game start");
     setQuestion();
     startButton.remove;
+    setOptions;
   
 }
 
