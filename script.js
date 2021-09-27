@@ -15,9 +15,10 @@ var currentQuestion = questionSet[Math.floor(Math.random() * questionSet.length)
 console.log (currentQuestion.choices)
 
 function setQuestion() {
-    title.textContent = currentQuestion.question;
-    document.querySelector('p').textContent = '';
-    setChoices();
+var onScreenQuestion = document.createElement('p');
+onScreenQuestion.textContent = currentQuestion.question;
+document.body.appendChild(onScreenQuestion);
+console.log(onScreenQuestion)
    
 }
 
