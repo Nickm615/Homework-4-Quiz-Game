@@ -1,4 +1,3 @@
-//I collaborated on this project with my study group: John Coakley, Jessica Guico and Jason Xie. There will be similarities between our code.
 var timeEl = document.querySelector("#time");
 var secondsLeft = 60;
 var mainEl = document.querySelector('#main');
@@ -11,29 +10,43 @@ var question4 = { question: "placeholder 4", options:["A", "B", "C", "D"], answe
 var question5 = { question: "placeholder 5", options:["A", "B", "C", "D"], answer: "A" }
 //Questions are randomly selected using the following array and function
 var questionSet = [question1, question2, question3, question4, question5]
-var currentQuestion = questionSet[Math.floor(Math.random() * questionSet.length)];
 var userChoice = '';
-// console.log (currentQuestion.options)
-// //This function is supposed to overwrite "display: none" on the style of the choices container with the radio buttons. Not working right now.
-// function setChoices() {
-//     var choices = document.getElementById("choices");
-//     choices.style = "display: block";
-// }
-//Creates a new p element and assigns the content of the current question to it before appending it to make it visible
-function setQuestion() {
+//This function selects a random question from the set, then saves it as a variable and removes that question from the array to prevent questions from repeating
+function getCurrentQuestion(){ 
+    var randomNum = Math.floor(Math.random() * questionSet.length)
+    var selectedQuestion = questionSet[randomNum];
+    questionSet.splice(randomNum, 1);
+    return selectedQuestion;
+     }
+
+
+// Creates a new p element and assigns the content of the current question to it before appending it to make it visible
+function setQuestion(currentQuestion) {
     var onScreenQuestion = document.createElement('p');
     onScreenQuestion.textContent = currentQuestion.question;
-    document.body.appendChild(onScreenQuestion);
+    document.getElementById('options').appendChild(onScreenQuestion);
     console.log(onScreenQuestion)
        
     }
+    //This for loop generates a button for each option within the current question
+function setOptions(currentQuestion) {
+    for(var i=0; i<currentQuestion.options.length; i++) {
+        optionButton = document.createElement('button');
+        document.querySelector("#options").appendChild(optionButton);
+        optionButton.setAttribute("id",currentQuestion.options[i]);
+        optionButton.textContent = currentQuestion.options[i];
+        console.log(optionButton);
+    };
+
    //These functions send messages to user and are called based on game results
 function sendLoserMessage(){
+    mainEl.innerHTML = '';
     var loserMessage = document.createElement("h1");
     loserMessage.textContent = "LOSER!!!"
     mainEl.appendChild(loserMessage);
  }
  function sendWinnerMessage(){
+     mainEl.innerHTML = '';
      var winnerMessage = document.createElement('h1');
      winnerMessage.textContent = "You win!"
      mainEl.appendChild(winnerMessage);
@@ -52,46 +65,43 @@ function sendLoserMessage(){
  }
 
 
-    function checkAnswer() {
+    function checkAnswer(currentQuestion) {
         if (userChoice == currentQuestion.answer) {
             console.log('correct');
+            document.getElementById('options').innerHTML = '';
+            var newQuestion = getCurrentQuestion();
             sendCorrectAnswerMessage();
+            setQuestion(newQuestion);
+            setOptions(newQuestion);
         }
         else {
             sendIncorrectAnswerMessage();
+            secondsLeft = secondsLeft - 5;
         }
     }
 
     
-//This for loop generates a button for each option within the current question
-function setOptions() {
-    for(var i=0; i<currentQuestion.options.length; i++) {
-        optionButton = document.createElement('button');
-        document.querySelector("#options").appendChild(optionButton);
-        optionButton.setAttribute("id",currentQuestion.options[i]);
-        optionButton.textContent = currentQuestion.options[i];
-        console.log(optionButton);
-    };
+
     var optionA = document.getElementById("A");
-    var optionB = document.getElementById("B")
-    var optionC = document.getElementById("C")
-    var optionD = document.getElementById("D")
+    var optionB = document.getElementById("B");
+    var optionC = document.getElementById("C");
+    var optionD = document.getElementById("D");
 //These event listeners will set userChoice equal to the value of the option button clicked and run the checkAnswer function, which will compare to the correct answer stored in the question object.
     optionA.addEventListener("click", function(){
         userChoice='A';
-        checkAnswer();
+        checkAnswer(currentQuestion);
     });
     optionB.addEventListener("click", function(){
         userChoice='B';
-        checkAnswer();
+        checkAnswer(currentQuestion);
     });
     optionC.addEventListener("click", function(){
         userChoice='C';
-        checkAnswer();
+        checkAnswer(currentQuestion);
     });
     optionD.addEventListener("click", function(){
         userChoice='D';
-        checkAnswer();
+        checkAnswer(currentQuestion);
     });
 }
 
@@ -100,11 +110,12 @@ function setOptions() {
 
 
 function startGame() {
+    var question = getCurrentQuestion();
     setTime();
     console.log("game start");
-    setQuestion();
+    setQuestion(question);
     startButton.remove();
-    setOptions();
+    setOptions(question);
   
 }
 
@@ -118,10 +129,7 @@ function setTime() {
         secondsLeft--;
         timeEl.textContent = secondsLeft + " seconds remaining";
 
-        if(secondsLeft < 1) {
-            clearInterval(timerInterval);
-            sendMessage(); //This function will end game and display results
-        }
+        
     }, 1000); //timer interval in ms
 }
 
