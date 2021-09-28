@@ -67,16 +67,21 @@ function sendLoserMessage(){
 
     function checkAnswer(currentQuestion) {
         if (userChoice == currentQuestion.answer) {
-            console.log('correct');
             document.getElementById('options').innerHTML = '';
             var newQuestion = getCurrentQuestion();
             sendCorrectAnswerMessage();
             setQuestion(newQuestion);
             setOptions(newQuestion);
+            if (!questionSet) {
+                console.log('empty set')
+            }
         }
-        else {
+        if (userChoice !== currentQuestion.answer) {
             sendIncorrectAnswerMessage();
             secondsLeft = secondsLeft - 5;
+            if (secondsLeft < 1){
+                sendLoserMessage();
+            }
         }
     }
 
